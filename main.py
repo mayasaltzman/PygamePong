@@ -8,14 +8,15 @@ pygame.display.set_caption("Typing Test") #setting title of game window
 
 font = pygame.font.Font('freesansbold.ttf', 32)
 white = (255, 255, 255)
-green = (0, 255, 0)
-blue = (0, 0, 128)
+black = (0, 0, 0)
 
-text = font.render('Typing Test', True, green, blue)
+text = font.render('Typing Test', True, black, white)
 textRect = text.get_rect()
+textRect.center = (WIDTH/2,30)
+
 
 def draw_window():
-    WIN.fill((255,255,255)) #fill window to be white
+    WIN.fill((white)) #fill window to be white
     WIN.blit(text, textRect)
     pygame.display.update()
 
