@@ -1,6 +1,7 @@
 import pygame
 import os
 import random
+from textwrap import fill
 
 pygame.init()
 
@@ -9,7 +10,7 @@ WIN = pygame.display.set_mode((WIDTH,HEIGHT)) #sets width and height of game win
 pygame.display.set_caption("Typing Test") #setting title of game window
 
 titleFont = pygame.font.Font('freesansbold.ttf', 32)
-textFont = pygame.font.Font('freesansbold.ttf', 12)
+textFont = pygame.font.Font('freesansbold.ttf', 20)
 white = (255, 255, 255)
 black = (0, 0, 0)
 
@@ -17,7 +18,7 @@ title = titleFont.render('Typing Test', True, black, white)
 titleRect = title.get_rect()
 titleRect.center = (WIDTH/2,30)
 
-def display_text():
+def read_file():
     arr = os.listdir() #getting the list of files in the directory
     files = []
 
@@ -26,31 +27,38 @@ def display_text():
         if i.endswith(".txt") == True:
             files.append(i)
         
-    fileName = random.choice(files) #selecting a random file2
-    f = open(fileName, "r") 
+    fileName = random.choice(files) #selecting a random file
+    f = open(fileName, "r")
 
+    return f
+
+
+def draw_window(str):
+    WIN.fill((white)) #fill window to be white
+    WIN.blit(title, titleRect)
+    
     #displaying the text read from the random file
-    text = textFont.render(f.read(), True, black, white)
+    text = textFont.render(fill(str,40), True, black, white)
     textRect = text.get_rect()
     textRect.center = (WIDTH/2, HEIGHT/2)
     WIN.blit(text,textRect)
     
-def draw_window():
-    WIN.fill((white)) #fill window to be white
-    WIN.blit(title, titleRect)
-    display_text()
     pygame.display.update()
 
 
 def main():
     run = True
+
+    #reading random file to avoid infinite file reads
+    f = read_file()
+    str = f.read()
     
     #window runs until user exits window
     while run:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
-        draw_window()
+        draw_window(str)
     pygame.quit()
 
 if __name__ == "__main__":
