@@ -21,7 +21,17 @@ title = titleFont.render('Typing Test', True, black, white)
 titleRect = title.get_rect()
 titleRect.center = (WIDTH/2,30)
 
+def check_text(str, event, index):
+    letter = event.unicode #getting letter value from keyboard input
+    print("input")
+    print(letter)
+    print("str")
+    print(str[index])
+    if letter == str[index]: #comparing letter with index in text
+        print("true")
 
+
+#reads all files in the programs directory
 def read_file():
     arr = os.listdir() #getting the list of files in the directory
     files = []
@@ -36,7 +46,7 @@ def read_file():
 
     return f
 
-
+#draws pygame window
 def draw_window(str):
     WIN.fill((white)) #fill window to be white
     WIN.blit(title, titleRect)
@@ -46,7 +56,7 @@ def draw_window(str):
     # Displaying the wrapped text
     lines = wrapped_text.split('\n')
     y = (HEIGHT // 2 - len(lines) * textFont.get_height() // 2) + 60 #centering the text along the y axis
-
+    
     for line in lines:
         text = textFont.render(line, True, black)
         textRect = text.get_rect()
@@ -71,12 +81,22 @@ def main():
     #reading random file to avoid infinite file reads
     f = read_file()
     str = f.read()
+
+    index = 0 #position in the text
     
     #window runs until user exits window
     while run:
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:
+            if event.type == pygame.QUIT: #user quits the game
                 run = False
+            if event.type == pygame.KEYDOWN: #user enters a key
+                check_text(str,event,index) #check key for match in text
+                if event.key == pygame.K_LSHIFT or event.key == pygame.K_RSHIFT: #doesn't count shift as its own char 
+                    index = index
+                elif event.key == pygame.K_BACKSPACE or event.key == pygame.K_DELETE: #user can go back and retype
+                    index -= 1
+                else: #all other keys
+                    index+=1
         draw_window(str)
     pygame.quit()
 
