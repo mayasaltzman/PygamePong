@@ -8,7 +8,7 @@ pygame.init()
 FPS = 60 #frames per second
 clock = pygame.time.Clock()
 
-WIDTH,HEIGHT = 900,500
+WIDTH,HEIGHT = 900,600
 WIN = pygame.display.set_mode((WIDTH,HEIGHT)) #sets width and height of game window
 pygame.display.set_caption("Typing Test") #setting title of game window
 
@@ -21,14 +21,14 @@ title = titleFont.render('Typing Test', True, black, white)
 titleRect = title.get_rect()
 titleRect.center = (WIDTH/2,30)
 
+#checks text to see if it matches user input
 def check_text(str, event, index):
     letter = event.unicode #getting letter value from keyboard input
-    print("input")
-    print(letter)
-    print("str")
-    print(str[index])
+ 
     if letter == str[index]: #comparing letter with index in text
-        print("true")
+        return True
+    else:
+        return False
 
 
 #reads all files in the programs directory
@@ -47,7 +47,7 @@ def read_file():
     return f
 
 #draws pygame window
-def draw_window(str):
+def draw_window(str, is_match, index):
     WIN.fill((white)) #fill window to be white
     WIN.blit(title, titleRect)
 
@@ -55,7 +55,7 @@ def draw_window(str):
     
     # Displaying the wrapped text
     lines = wrapped_text.split('\n')
-    y = (HEIGHT // 2 - len(lines) * textFont.get_height() // 2) + 60 #centering the text along the y axis
+    y = (HEIGHT // 2 - len(lines) * textFont.get_height() // 2) + 30 #centering the text along the y axis
     
     for line in lines:
         text = textFont.render(line, True, black)
@@ -83,6 +83,7 @@ def main():
     str = f.read()
 
     index = 0 #position in the text
+    is_match = False #boolean to termin
     
     #window runs until user exits window
     while run:
@@ -90,14 +91,14 @@ def main():
             if event.type == pygame.QUIT: #user quits the game
                 run = False
             if event.type == pygame.KEYDOWN: #user enters a key
-                check_text(str,event,index) #check key for match in text
+                is_match = check_text(str,event,index) #check key for match in text
                 if event.key == pygame.K_LSHIFT or event.key == pygame.K_RSHIFT: #doesn't count shift as its own char 
                     index = index
                 elif event.key == pygame.K_BACKSPACE or event.key == pygame.K_DELETE: #user can go back and retype
                     index -= 1
                 else: #all other keys
                     index+=1
-        draw_window(str)
+        draw_window(str, is_match, index)
     pygame.quit()
 
 if __name__ == "__main__":
